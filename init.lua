@@ -4,3 +4,4 @@ require("configure-bindings").Configure()
 
 -- Setup package manager
 require("pkgmgr.lazy")
+

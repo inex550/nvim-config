@@ -21,14 +21,6 @@ local function SetupLsp()
                     function() vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 }) end,
                     { buffer = args.buf }
                 )
-
-                -- vim.api.nvim_create_autocmd('BufWritePre', {
-                --     group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
-                --     buffer = args.buf,
-                --     callback = function()
-                --         vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
-                --     end,
-                -- })
             end
         end
     })
@@ -46,25 +38,6 @@ local function BindDefaultAutoCmds()
     })
 end
 
--- Produces a sudo cmd from cmd in arguments
--- asks password and automatically provides it to result command
-local function SudoCmd(cmd)
-    vim.fn.inputsave()
-    local password = vim.fn.inputsecret("Password: ")
-    vim.fn.inputrestore()
-
-    local sudoCmd = string.format("sh -c 'echo %s; cat' | sudo -S -p '' -k", vim.fn.shellescape(password))
-
-    return string.format("%s %s", sudoCmd, cmd);
-end
-
--- Writes file from current buffer into file using :write cmd
-local function SudoWrite()
-    local writeFilepath = vim.fn.expand("%")
-    local writeCommand = "tee " .. writeFilepath .. " > /dev/null"
-    vim.api.nvim_command("write !" .. SudoCmd(writeCommand))
-end
-
 -- Setup my default bindings
 local function BindDefaultKeymaps()
     vim.g.mapleader = " "
@@ -77,8 +50,6 @@ local function BindDefaultKeymaps()
     end);
     vim.keymap.set("n", "<Leader>x", ":.lua<CR>");
     vim.keymap.set("v", "<Leader>x", ":lua<CR>");
-
-    vim.keymap.set("c", "w!!", SudoWrite)
 end
 
 return {

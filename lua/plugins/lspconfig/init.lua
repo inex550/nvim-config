@@ -2,7 +2,7 @@ return {
     "neovim/nvim-lspconfig",
 
     config = function()
-        local configsModule = "pkgmgr.plugins.lspconfig.per-language"
+        local configsModule = "plugins.lspconfig.per-language"
 
         require(configsModule .. ".lua").Configure()
         require(configsModule .. ".clangd").Configure()
