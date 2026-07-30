@@ -19,6 +19,25 @@ local function SetupBindings()
         callback = function(args)
             -- LSP client of this buffer
             local client = assert(vim.lsp.get_client_by_id(args.data.client_id), "No associated client_id for lsp command")
+
+            -- If client supports hover (seeing details about symbol under cursor)
+            -- -- Enable <Leader> + E hotkey -> Show hover info
+            if client:supports_method("textDocument/hover") then
+                local onHoverTriggered = function()
+                    vim.lsp.buf.hover()
+                end
+                vim.keymap.set("n", "<Leader>q", onHoverTriggered, { buffer = args.buf })
+            end
+
+            -- If client supports rename (renaming symbol under cursor)
+            -- -- Enable <Leader> + R + R hotkey -> Rename symbol
+            if client:supports_method("textDocument/rename") then
+                local onRenameTriggered = function()
+                    vim.lsp.buf.rename()
+                end
+                vim.keymap.set("n", "<Leader>rr", onRenameTriggered, { buffer = args.buf })
+            end
+
             -- If client supports completion
             -- -- Enable completion menu autotrigger
             -- -- Enable <Ctrl + Space> hotkey -> Show completion
